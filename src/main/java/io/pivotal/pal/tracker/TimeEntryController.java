@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/time-entries")
 public class TimeEntryController {
 
     TimeEntryRepository timeEntryRepository;
@@ -17,30 +18,36 @@ public class TimeEntryController {
         this.timeEntryRepository = timeEntryRepository;
     }
 
-    @PostMapping("/time-entries")
+    @PostMapping(consumes = {"application/json"})
     public ResponseEntity create(@RequestBody TimeEntry timeEntryToCreate) {
         TimeEntry timeEntry = timeEntryRepository.create(timeEntryToCreate);
         return ResponseEntity.status(HttpStatus.CREATED).body(timeEntry);
     }
 
-    @GetMapping("/time-entries/{timeEntryId}")
+    @PostMapping(consumes = {"application/vnd.example.v2+json"})
+    public ResponseEntity createV2(@RequestBody TimeEntryV2 timeEntryToCreate) {
+        TimeEntry timeEntry = timeEntryRepository.create(timeEntryToCreate);
+        return ResponseEntity.status(HttpStatus.CREATED).body(timeEntry);
+    }
+
+    @GetMapping("{timeEntryId}")
     public ResponseEntity<TimeEntry> read(@PathVariable("timeEntryId") long timeEntryId) {
         TimeEntry timeEntry = timeEntryRepository.find(timeEntryId);
         return timeEntry == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(timeEntry);
     }
 
-    @GetMapping("/time-entries")
+    @GetMapping
     public ResponseEntity<List<TimeEntry>> list() {
         return ResponseEntity.ok(timeEntryRepository.list());
     }
 
-    @PutMapping("/time-entries/{timeEntryId}")
+    @PutMapping("{timeEntryId}")
     public ResponseEntity update(@PathVariable("timeEntryId") long timeEntryId, @RequestBody TimeEntry expected) {
         TimeEntry timeEntry = timeEntryRepository.update(timeEntryId, expected);
         return timeEntry == null ? ResponseEntity.notFound().build() : ResponseEntity.ok(timeEntry);
     }
 
-    @DeleteMapping("/time-entries/{timeEntryId}")
+    @DeleteMapping("{timeEntryId}")
     public ResponseEntity delete(@PathVariable("timeEntryId") long timeEntryId) {
         timeEntryRepository.delete(timeEntryId);
         return ResponseEntity.noContent().build();
