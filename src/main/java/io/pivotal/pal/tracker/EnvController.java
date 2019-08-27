@@ -9,32 +9,29 @@ import java.util.Map;
 
 @RestController
 public class EnvController {
-
-    private final String port;
-    private final String memoryLimit;
-    private final String cfInstanceIndex;
-    private final String cfInstanceAddress;
+    private String port;
+    private String memoryLimit;
+    private String cfInstanceIndex;
+    private String cfInstanceAddr;
 
     public EnvController(
             @Value("${port:NOT SET}") String port,
-            @Value("${memory.limit:NOT SET}") String memoryLimit,
+            @Value("${memory.limit:NOT SET}")String memoryLimit,
             @Value("${cf.instance.index:NOT SET}") String cfInstanceIndex,
-            @Value("${cf.instance.addr:NOT SET}") String cfInstanceAddress
-    ) {
+            @Value("${cf.instance.addr:NOT SET}")String cfInstanceAddr) {
         this.port = port;
         this.memoryLimit = memoryLimit;
         this.cfInstanceIndex = cfInstanceIndex;
-        this.cfInstanceAddress = cfInstanceAddress;
+        this.cfInstanceAddr = cfInstanceAddr;
     }
 
     @GetMapping("/env")
-    public Map<String, String> getEnv() {
+    public Map<String, String> getEnv(){
         Map<String, String> env = new HashMap<>();
-
         env.put("PORT", port);
         env.put("MEMORY_LIMIT", memoryLimit);
         env.put("CF_INSTANCE_INDEX", cfInstanceIndex);
-        env.put("CF_INSTANCE_ADDR", cfInstanceAddress);
+        env.put("CF_INSTANCE_ADDR", cfInstanceAddr);
 
         return env;
     }
