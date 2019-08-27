@@ -4,20 +4,21 @@ package io.pivotal.pal.tracker;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class InMemoryTimeEntryRepository implements TimeEntryRepository {
 
-    private Map<Long, TimeEntry> backingMap = new HashMap<>();
+    private Map<Long, TimeEntry> backingMap = new ConcurrentHashMap<>();
 
-    private long idIncrement = 0;
+    private AtomicLong idIncrement = new AtomicLong(0);
 
     @Override
     public TimeEntry create(TimeEntry timeEntry) {
-        timeEntry.setId(++idIncrement);
+        timeEntry.setId(idIncrement.incrementAndGet());
         backingMap.put(timeEntry.getId(), timeEntry);
         return timeEntry;
     }
